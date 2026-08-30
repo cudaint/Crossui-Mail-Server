@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crossui Mail Server — firemní pošta, která zůstává u vás</title>
+<meta name="description" content="Self-hosted poštovní server pro české firmy: SMTP, IMAP, POP3, CalDAV, CardDAV, webmail a správa v češtině. Jeden kontejner, jedna záloha, žádný cloud.">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-alt: #f5f7fa;
+    --text: #1a2233;
+    --muted: #5a6478;
+    --accent: #2456c8;
+    --accent-soft: #e8eefb;
+    --border: #dde3ec;
+    --ok: #1e7a3c;
+    --no: #b23c3c;
+    --card: #ffffff;
+    --code-bg: #101726;
+    --code-text: #d9e2f2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e1420;
+      --bg-alt: #131b2b;
+      --text: #e6ebf4;
+      --muted: #93a0b8;
+      --accent: #6d9aff;
+      --accent-soft: #1a2742;
+      --border: #253147;
+      --ok: #4fc077;
+      --no: #e07a7a;
+      --card: #16203270;
+      --code-bg: #0a0f19;
+      --code-text: #cfd9ea;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Hero */
+  header {
+    background: linear-gradient(160deg, var(--accent-soft), var(--bg) 70%);
+    border-bottom: 1px solid var(--border);
+    padding: 72px 0 56px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 36px; font-weight: 700; font-size: 1.05rem; letter-spacing: .02em; }
+  .brand svg { width: 34px; height: 34px; color: var(--accent); flex: none; }
+  h1 { font-size: clamp(1.9rem, 4.5vw, 2.9rem); line-height: 1.15; letter-spacing: -0.02em; max-width: 21ch; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .lead { margin-top: 18px; font-size: 1.15rem; color: var(--muted); max-width: 56ch; }
+  .hero-badges { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .hero-badges span {
+    background: var(--card); border: 1px solid var(--border); border-radius: 999px;
+    padding: 6px 14px; font-size: .88rem; font-weight: 600;
+  }
+  .cta-row { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn {
+    display: inline-block; padding: 12px 22px; border-radius: 10px; font-weight: 650; font-size: .98rem;
+    border: 1px solid transparent;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { text-decoration: none; filter: brightness(1.08); }
+  .btn-ghost { border-color: var(--border); color: var(--text); background: var(--card); }
+  .btn-ghost:hover { text-decoration: none; border-color: var(--accent); }
+
+  section { padding: 56px 0; }
+  section.alt { background: var(--bg-alt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  h2 { font-size: clamp(1.4rem, 3vw, 1.85rem); letter-spacing: -0.015em; margin-bottom: 8px; }
+  .sub { color: var(--muted); max-width: 62ch; margin-bottom: 32px; }
+
+  /* Feature grid */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px;
+  }
+  .card h3 { font-size: 1.02rem; margin-bottom: 8px; display: flex; align-items: center; gap: 9px; }
+  .card h3 .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); flex: none; }
+  .card p { font-size: .93rem; color: var(--muted); }
+
+  /* Unique list */
+  .unique { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 4px 36px; }
+  .unique div { padding: 12px 0; border-bottom: 1px solid var(--border); font-size: .95rem; }
+  .unique b { display: block; margin-bottom: 2px; }
+  .unique span { color: var(--muted); font-size: .9rem; }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 14px; background: var(--card); }
+  table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: .92rem; }
+  th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+  thead th { background: var(--bg-alt); font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  tbody tr:last-child td { border-bottom: none; }
+  td.f { font-weight: 600; }
+  th.hl, td.hl { background: var(--accent-soft); }
+  .yes { color: var(--ok); font-weight: 700; }
+  .no { color: var(--no); font-weight: 700; }
+  .part { color: var(--muted); }
+
+  /* Code */
+  pre {
+    background: var(--code-bg); color: var(--code-text); border-radius: 12px;
+    padding: 20px 22px; overflow-x: auto; font-size: .86rem; line-height: 1.55;
+    font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  /* Roadmap */
+  .road { display: flex; flex-wrap: wrap; gap: 10px; }
+  .road span {
+    border: 1px dashed var(--border); border-radius: 999px; padding: 7px 16px;
+    font-size: .9rem; color: var(--muted);
+  }
+
+  /* Contact */
+  .contact-box {
+    background: var(--accent-soft); border: 1px solid var(--border); border-radius: 16px;
+    padding: 34px; display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: space-between;
+  }
+  .contact-box h2 { margin-bottom: 4px; }
+  .contact-box p { color: var(--muted); max-width: 48ch; }
+
+  footer { padding: 34px 0 46px; color: var(--muted); font-size: .87rem; border-top: 1px solid var(--border); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="2.5" y="5" width="19" height="14" rx="2.5"/>
+        <path d="M3.5 7l8.5 6 8.5-6"/>
+      </svg>
+      Crossui Mail Server
+    </div>
+    <h1>Firemní pošta, kalendář a kontakty, <em>které zůstávají u&nbsp;vás</em></h1>
+    <p class="lead">Poštovní server, který se instaluje jedním příkazem a zálohuje zkopírováním
+    jednoho adresáře. Vždy self-hosted — vaše zprávy nikdy neleží v&nbsp;cizím cloudu
+    a server funguje, i&nbsp;kdyby jeho výrobce zítra zmizel.</p>
+    <div class="hero-badges">
+      <span>🔒 Vždy self-hosted</span>
+      <span>📦 Jeden kontejner</span>
+      <span>💾 Jedna záloha</span>
+      <span>🇨🇿 Česky — rozhraní i dokumentace</span>
+    </div>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#quickstart">Vyzkoušet za 5 minut</a>
+      <a class="btn btn-ghost" href="#kontakt">Pro IT partnery</a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>Proč self-hosted</h2>
+    <p class="sub">Pošta je nejcitlivější data firmy: smlouvy, nabídky, výkresy, personálie.
+    U&nbsp;nás platí jednoduché pravidlo — <strong>všechno leží na vašem serveru, v&nbsp;jednom
+    adresáři, který si zazálohujete sami.</strong> Žádná telemetrie, žádné „volání domů",
+    žádná závislost na cizí službě.</p>
+    <div class="grid">
+      <div class="card">
+        <h3><span class="dot"></span>Kompletní poštovní server</h3>
+        <p>SMTP (příjem i&nbsp;odesílání), IMAP4rev1 s&nbsp;IDLE a&nbsp;fulltextovým hledáním,
+        POP3. Trvalá odchozí fronta s&nbsp;opakováním a&nbsp;oznámeními o&nbsp;nedoručení,
+        smarthost i&nbsp;přímé doručování podle MX.</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot"></span>Kalendáře a kontakty</h3>
+        <p>CalDAV a&nbsp;CardDAV pro Apple Mail, Thunderbird i&nbsp;mobily — osobní
+        i&nbsp;firemní kalendáře, přírůstková synchronizace. K&nbsp;tomu poznámky
+        a&nbsp;úkoly synchronizované přes IMAP.</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot"></span>Webmail a správa v češtině</h3>
+        <p>Plnohodnotný webový klient: čtení, psaní, přílohy, podpisy, pravidla třídění,
+        kalendář, „mimo kancelář". Správcovské rozhraní s&nbsp;přehledem provozu, frontou,
+        karanténou a&nbsp;logem serveru.</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot"></span>Doručitelnost na úrovni velkých</h3>
+        <p>SPF, DKIM (podpis i&nbsp;ověření), DMARC včetně souhrnných hlášení, MTA-STS,
+        DANE a&nbsp;SRS pro přeposílání. Server vám rovnou vypíše DNS záznamy
+        a&nbsp;zkontroluje, že sedí.</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot"></span>Certifikáty se řeší samy</h3>
+        <p>Vestavěný Let's Encrypt klient certifikáty vydává i&nbsp;obnovuje automaticky.
+        Sklad certifikátů s&nbsp;výběrem podle jména (SNI), import i&nbsp;export —
+        bez certbota a&nbsp;bez restartů.</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot"></span>Ochrana bez příplatků</h3>
+        <p>Filtr spamu s&nbsp;DNSBL/SURBL, greylisting, vlastní pravidla, limity na IP.
+        Filtr příloh blokuje spustitelné soubory i&nbsp;uvnitř ZIPu. Karanténa,
+        volitelně ClamAV — žádný placený antivirusový modul.</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot"></span>Firemní přihlašování</h3>
+        <p>Napojení na Active Directory / OpenLDAP včetně zakládání schránek
+        z&nbsp;adresáře, přihlášení přes OAuth poskytovatele a&nbsp;hesla aplikací
+        pro mobilní klienty.</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot"></span>Kvóty, aliasy, domény</h3>
+        <p>Víc domén na jednom serveru, aliasy a&nbsp;distribuční skupiny, sběrné schránky,
+        kvóty na místo i&nbsp;počet položek s&nbsp;varováním e-mailem, zápatí domény,
+        promazávání staré pošty.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <h2>Co jinde nenajdete</h2>
+    <p class="sub">Detaily, které vzešly z dvaceti let provozu poštovních serverů u českých firem.</p>
+    <div class="unique">
+      <div><b>Čeština ve fulltextu bez diakritiky</b><span>„zlutoucky" najde „žluťoučký" — v&nbsp;obsahu zpráv, přílohách i&nbsp;jejich názvech.</span></div>
+      <div><b>Stará česká pošta se čte správně</b><span>Windows-1250 i&nbsp;UTF-8, hlavičky i&nbsp;tělo — bez rozsypaných háčků a&nbsp;čárek.</span></div>
+      <div><b>Pravidla třídění na serveru</b><span>Nastavíte je ve webmailu — a&nbsp;platí i&nbsp;pro Outlook a&nbsp;mobil, protože se vyhodnocují při doručení.</span></div>
+      <div><b>Podpisy jako doménová šablona</b><span>Podpis se napíše jednou pro firmu a&nbsp;každé schránce se vyplní jejími údaji z&nbsp;adresáře.</span></div>
+      <div><b>Odchozí TLS s ověřením protistrany</b><span>MTA-STS a&nbsp;DANE — pošta ven neodejde serveru, který se jen vydává za příjemce.</span></div>
+      <div><b>Souhrnná hlášení DMARC</b><span>Server hlášení nejen vyhodnocuje, ale umí je i&nbsp;sám denně rozesílat.</span></div>
+      <div><b>Otevřený relay nejde omylem zapnout</b><span>Role je vlastnost portu: port 25 doručuje jen dovnitř, odeslat ven smí jen přihlášený.</span></div>
+      <div><b>Žádné výchozí heslo, žádná telemetrie</b><span>Přístupový klíč se generuje při prvním startu. Server neposílá nikam nic — ani nám.</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Srovnání</h2>
+    <p class="sub">Poctivé srovnání s&nbsp;tím, co dnes české firmy používají.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th class="hl">Crossui Mail Server</th>
+            <th>Kerio Connect</th>
+            <th>Microsoft 365</th>
+            <th>Open-source skládačky</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="f">Data ve vaší firmě</td>
+            <td class="hl"><span class="yes">✓</span> vždy</td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="no">✗</span> cloud</td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+          <tr>
+            <td class="f">Nasazení</td>
+            <td class="hl">1 kontejner, 1 příkaz</td>
+            <td>instalace + údržba OS</td>
+            <td>—</td>
+            <td>5–10 kontejnerů a služeb</td>
+          </tr>
+          <tr>
+            <td class="f">Záloha</td>
+            <td class="hl">kopie jednoho adresáře</td>
+            <td>vlastní nástroj</td>
+            <td>export přes API</td>
+            <td>podle skládačky</td>
+          </tr>
+          <tr>
+            <td class="f">Kalendáře a kontakty</td>
+            <td class="hl"><span class="yes">✓</span> CalDAV / CardDAV</td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td class="part">doplňkově</td>
+          </tr>
+          <tr>
+            <td class="f">Rozhraní a dokumentace česky</td>
+            <td class="hl"><span class="yes">✓</span> kompletně</td>
+            <td class="part">částečně</td>
+            <td class="part">částečně</td>
+            <td><span class="no">✗</span></td>
+          </tr>
+          <tr>
+            <td class="f">Odchozí MTA-STS + DANE</td>
+            <td class="hl"><span class="yes">✓</span></td>
+            <td><span class="no">✗</span></td>
+            <td class="part">částečně</td>
+            <td class="part">podle skládačky</td>
+          </tr>
+          <tr>
+            <td class="f">Antivirus</td>
+            <td class="hl">v ceně (ClamAV, volitelný)</td>
+            <td>placený modul navíc</td>
+            <td>v ceně</td>
+            <td>vlastní konfigurace</td>
+          </tr>
+          <tr>
+            <td class="f">Licencování</td>
+            <td class="hl">na server, ne na uživatele</td>
+            <td>na uživatele / rok</td>
+            <td>na uživatele / měsíc</td>
+            <td>zdarma + vlastní práce</td>
+          </tr>
+          <tr>
+            <td class="f">Funguje bez výrobce</td>
+            <td class="hl"><span class="yes">✓</span> žádná aktivace ani cloud</td>
+            <td class="part">licenční server</td>
+            <td><span class="no">✗</span></td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="quickstart">
+  <div class="wrap">
+    <h2>Rozjetí za pět minut</h2>
+    <p class="sub">Žádná databáze, žádné další služby. Jeden kontejner, jeden svazek —
+    index i&nbsp;pošta leží v&nbsp;<code>/var/lib/crossui-mail</code> a&nbsp;záloha je kopie tohoto adresáře.</p>
+<pre>docker run -d --name crossui-mail \
+  -e "MailServer__Hostname=mail.priklad.cz" \
+  -p 25:2525 -p 587:5587 -p 465:4465 \
+  -p 143:1143 -p 993:9993 \
+  -v crossui-mail-data:/var/lib/crossui-mail \
+  ghcr.io/cudaint/crossmailserver:latest</pre>
+    <p style="margin-top:16px; color: var(--muted); font-size: .93rem;">
+    Server si při prvním startu sám vytvoří index, vystaví certifikát a&nbsp;vypíše
+    správcovský klíč do logu. Běží jako non-root, obraz je pro amd64 i&nbsp;arm64.
+    Domény, schránky, porty i&nbsp;bezpečnostní politiku pak nastavíte ve správě v&nbsp;prohlížeči.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Navrženo pro jeden server — schválně</h2>
+    <p class="sub">Crossui Mail Server necílí na cloudové flotily s&nbsp;tisíci uzly.
+    Je stavěný pro firmu do stovek schránek na jednom stroji: proto vystačí
+    s&nbsp;jedním procesem, jedním adresářem dat a&nbsp;nulou externích závislostí —
+    a&nbsp;proto se dá spravovat za zlomek času. Změny portů, certifikátů
+    i&nbsp;pravidel platí za běhu, bez restartu.</p>
+    <h2 style="margin-top: 40px;">Připravujeme</h2>
+    <div class="road" style="margin-top: 16px;">
+      <span>Pozvánky na schůzky a free/busy (CalDAV scheduling)</span>
+      <span>Sdílené schránky s delegováním (info@, objednávky@)</span>
+      <span>Webmail jako aplikace do mobilu s notifikacemi (PWA)</span>
+      <span>Dvoufázové ověření</span>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="kontakt">
+  <div class="wrap">
+    <div class="contact-box">
+      <div>
+        <h2>Pro IT firmy a partnery</h2>
+        <p>Licence na server, ne na uživatele. Nasazujete vy, podporu první linie
+        děláte vy — my dodáváme produkt, aktualizace a&nbsp;zázemí. Ozvěte se,
+        pošleme podmínky a&nbsp;zkušební licenci.</p>
+      </div>
+      <a class="btn btn-primary" href="mailto:lubos@crossui.eu">lubos@crossui.eu</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 Crossui — <a href="https://crossui.eu">crossui.eu</a></div>
+    <div>Crossui Mail Server běží i na doméně, ze které vám píšeme.</div>
+  </div>
+</footer>
+
+</body>
+</html>
