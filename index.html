@@ -115,6 +115,11 @@
   .no { color: var(--no); font-weight: 700; }
   .part { color: var(--muted); }
 
+  /* Edition lists */
+  .ticks { list-style: none; font-size: .93rem; color: var(--muted); }
+  .ticks li { position: relative; padding-left: 22px; margin-top: 7px; }
+  .ticks li::before { content: "✓"; position: absolute; left: 0; color: var(--ok); font-weight: 700; }
+  .ticks b { color: var(--text); }
   /* Code */
   pre {
     background: var(--code-bg); color: var(--code-text); border-radius: 12px;
@@ -155,16 +160,18 @@
     </div>
     <h1>Firemní pošta, kalendář a kontakty, <em>které zůstávají u&nbsp;vás</em></h1>
     <p class="lead">Poštovní server, který se instaluje jedním příkazem a zálohuje zkopírováním
-    jednoho adresáře. Vždy self-hosted — vaše zprávy nikdy neleží v&nbsp;cizím cloudu
-    a server funguje, i&nbsp;kdyby jeho výrobce zítra zmizel.</p>
+    jednoho adresáře. Vždy self-hosted — vaše zprávy nikdy neleží v&nbsp;cizím cloudu.
+    Do pěti schránek zdarma, bez registrace.</p>
     <div class="hero-badges">
       <span>🔒 Vždy self-hosted</span>
       <span>📦 Jeden kontejner</span>
       <span>💾 Jedna záloha</span>
+      <span>🎁 Zdarma do 5 schránek</span>
       <span>🇨🇿 Česky — rozhraní i dokumentace</span>
     </div>
     <div class="cta-row">
       <a class="btn btn-primary" href="#quickstart">Vyzkoušet za 5 minut</a>
+      <a class="btn btn-ghost" href="#edice">Komunitní verze a licence</a>
       <a class="btn btn-ghost" href="#kontakt">Pro IT partnery</a>
     </div>
   </div>
@@ -175,8 +182,9 @@
     <h2>Proč self-hosted</h2>
     <p class="sub">Pošta je nejcitlivější data firmy: smlouvy, nabídky, výkresy, personálie.
     U&nbsp;nás platí jednoduché pravidlo — <strong>všechno leží na vašem serveru, v&nbsp;jednom
-    adresáři, který si zazálohujete sami.</strong> Žádná telemetrie, žádné „volání domů",
-    žádná závislost na cizí službě.</p>
+    adresáři, který si zazálohujete sami.</strong> Žádná telemetrie a&nbsp;žádná pošta
+    ani adresy u&nbsp;nás. Ven jde jen ověření placené licence — a&nbsp;i&nbsp;to vydrží
+    dva týdny bez spojení.</p>
     <div class="grid">
       <div class="card">
         <h3><span class="dot"></span>Kompletní poštovní server</h3>
@@ -224,7 +232,8 @@
         <h3><span class="dot"></span>Kvóty, aliasy, domény</h3>
         <p>Víc domén na jednom serveru, aliasy a&nbsp;distribuční skupiny, sběrné schránky,
         kvóty na místo i&nbsp;počet položek s&nbsp;varováním e-mailem, zápatí domény,
-        promazávání staré pošty.</p>
+        promazávání staré pošty. Delegování schránky kolegovi — číst, třídit
+        i&nbsp;odesílat za šéfa.</p>
       </div>
     </div>
   </div>
@@ -242,7 +251,7 @@
       <div><b>Odchozí TLS s ověřením protistrany</b><span>MTA-STS a&nbsp;DANE — pošta ven neodejde serveru, který se jen vydává za příjemce.</span></div>
       <div><b>Souhrnná hlášení DMARC</b><span>Server hlášení nejen vyhodnocuje, ale umí je i&nbsp;sám denně rozesílat.</span></div>
       <div><b>Otevřený relay nejde omylem zapnout</b><span>Role je vlastnost portu: port 25 doručuje jen dovnitř, odeslat ven smí jen přihlášený.</span></div>
-      <div><b>Žádné výchozí heslo, žádná telemetrie</b><span>Přístupový klíč se generuje při prvním startu. Server neposílá nikam nic — ani nám.</span></div>
+      <div><b>Žádné výchozí heslo, žádná telemetrie</b><span>Přístupový klíč se generuje při prvním startu. Komunitní verze nevolá nikam; placená licence posílá jen číslo licence a&nbsp;počty schránek — nikdy poštu ani adresy.</span></div>
     </div>
   </div>
 </section>
@@ -314,14 +323,14 @@
           </tr>
           <tr>
             <td class="f">Licencování</td>
-            <td class="hl">na server, ne na uživatele</td>
+            <td class="hl">zdarma do 5 schránek, nad to licence na server</td>
             <td>na uživatele / rok</td>
             <td>na uživatele / měsíc</td>
             <td>zdarma + vlastní práce</td>
           </tr>
           <tr>
-            <td class="f">Funguje bez výrobce</td>
-            <td class="hl"><span class="yes">✓</span> žádná aktivace ani cloud</td>
+            <td class="f">Výpadek u výrobce</td>
+            <td class="hl"><span class="yes">✓</span> pošta jede dál, licence vydrží 14 dní bez spojení</td>
             <td class="part">licenční server</td>
             <td><span class="no">✗</span></td>
             <td><span class="yes">✓</span></td>
@@ -332,7 +341,48 @@
   </div>
 </section>
 
-<section class="alt" id="quickstart">
+<section class="alt" id="edice">
+  <div class="wrap">
+    <h2>Komunitní verze, licence a cloud</h2>
+    <p class="sub">Server je pořád jeden a&nbsp;tentýž — licence jen odemyká počet schránek.
+    Cloud je volitelný doplněk pro ty, kdo spravují víc serverů.</p>
+    <div class="grid">
+      <div class="card">
+        <h3><span class="dot"></span>Komunitní verze — zdarma</h3>
+        <ul class="ticks">
+          <li>až <b>5 schránek</b>, všechny funkce serveru</li>
+          <li>bez registrace a&nbsp;bez licenčního klíče</li>
+          <li>nikam se nehlásí — běží i&nbsp;v&nbsp;uzavřené síti</li>
+          <li>ideální pro malou firmu, rodinu nebo vyzkoušení</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="dot"></span>Licence — schránky bez omezení</h3>
+        <ul class="ticks">
+          <li>licence na server, ne na uživatele</li>
+          <li>ověřuje se u&nbsp;licenčního serveru dvakrát denně; výpadek spojení
+          nevadí <b>14&nbsp;dní</b></li>
+          <li>aktualizace se nabídnou ve správě a&nbsp;nainstalují po potvrzení
+          (Windows, Linux), Docker si stáhne nový image</li>
+          <li>po vypršení se <b>nic nemaže</b> a&nbsp;pošta se doručuje dál — server
+          se jen zúží na pět schránek, po prodloužení se vše vrátí</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="dot"></span>Crossui Cloud — volitelně</h3>
+        <ul class="ticks">
+          <li>správa <b>více serverů na jednom místě</b> — třeba všech vašich zákazníků</li>
+          <li>server se připojí sám ven, u&nbsp;zákazníka se neotevírá žádný port</li>
+          <li>sdílení serverů s&nbsp;kolegy: vlastník, správce, jen čtení — v&nbsp;logu
+          je vidět, kdo co udělal</li>
+          <li>pošta v&nbsp;cloudu neleží nikdy; bez cloudu server funguje stejně</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="quickstart">
   <div class="wrap">
     <h2>Rozjetí za pět minut</h2>
     <p class="sub">Žádná databáze, žádné další služby. Jeden kontejner, jeden svazek —
@@ -346,35 +396,37 @@
     <p style="margin-top:16px; color: var(--muted); font-size: .93rem;">
     Server si při prvním startu sám vytvoří index, vystaví certifikát a&nbsp;vypíše
     správcovský klíč do logu. Běží jako non-root, obraz je pro amd64 i&nbsp;arm64.
-    Domény, schránky, porty i&nbsp;bezpečnostní politiku pak nastavíte ve správě v&nbsp;prohlížeči.</p>
+    Domény, schránky, porty i&nbsp;bezpečnostní politiku pak nastavíte ve správě v&nbsp;prohlížeči.
+    Bez licence běží jako komunitní verze do pěti schránek; licenční klíč se dá vložit kdykoli později.</p>
   </div>
 </section>
 
-<section>
+<section class="alt">
   <div class="wrap">
     <h2>Navrženo pro jeden server — schválně</h2>
     <p class="sub">Crossui Mail Server necílí na cloudové flotily s&nbsp;tisíci uzly.
     Je stavěný pro firmu do stovek schránek na jednom stroji: proto vystačí
     s&nbsp;jedním procesem, jedním adresářem dat a&nbsp;nulou externích závislostí —
     a&nbsp;proto se dá spravovat za zlomek času. Změny portů, certifikátů
-    i&nbsp;pravidel platí za běhu, bez restartu.</p>
+    i&nbsp;pravidel platí za běhu, bez restartu. Kdo má takových serverů víc,
+    spravuje je z&nbsp;jednoho místa přes Crossui Cloud.</p>
     <h2 style="margin-top: 40px;">Připravujeme</h2>
     <div class="road" style="margin-top: 16px;">
       <span>Pozvánky na schůzky a free/busy (CalDAV scheduling)</span>
-      <span>Sdílené schránky s delegováním (info@, objednávky@)</span>
       <span>Webmail jako aplikace do mobilu s notifikacemi (PWA)</span>
       <span>Dvoufázové ověření</span>
     </div>
   </div>
 </section>
 
-<section class="alt" id="kontakt">
+<section id="kontakt">
   <div class="wrap">
     <div class="contact-box">
       <div>
         <h2>Pro IT firmy a partnery</h2>
         <p>Licence na server, ne na uživatele. Nasazujete vy, podporu první linie
-        děláte vy — my dodáváme produkt, aktualizace a&nbsp;zázemí. Ozvěte se,
+        děláte vy — my dodáváme produkt, aktualizace a&nbsp;zázemí. Servery všech
+        svých zákazníků máte v&nbsp;Crossui Cloud pod jedním přihlášením. Ozvěte se,
         pošleme podmínky a&nbsp;zkušební licenci.</p>
       </div>
       <a class="btn btn-primary" href="mailto:lubos@crossui.eu">lubos@crossui.eu</a>
@@ -385,7 +437,6 @@
 <footer>
   <div class="wrap">
     <div>© 2026 Crossui — <a href="https://crossui.eu">crossui.eu</a></div>
-    <div>Crossui Mail Server běží i na doméně, ze které vám píšeme.</div>
   </div>
 </footer>
 
